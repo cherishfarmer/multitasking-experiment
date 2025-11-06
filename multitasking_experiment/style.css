@@ -1,0 +1,39 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f7f7f7;
+}
+/* 1) Global page/background override (high priority) */
+html, body {
+    background: #f7f7f7 !important;
+    color: #000 !important;
+    height: 100% !important;
+}
+
+/* 2) jsPsych display/content elements (covers most jsPsych versions) */
+.jspsych-display-element,
+.jspsych-display-element * {
+    background: transparent !important;     /* let the page/background show through */
+    color: inherit !important;
+}
+
+/* 3) jsPsych content container, target, and common IDs */
+#jspsych-target, .jspsych-content, .jspsych-display-stage {
+    background: transparent !important;
+    color: inherit !important;
+}
+
+/* 4) Fullscreen pseudo-classes — make sure fullscreen elements show the correct BG */
+:fullscreen,
+:fullscreen body,
+:fullscreen .jspsych-display-element,
+:-webkit-full-screen,
+:-webkit-full-screen body,
+:-webkit-full-screen .jspsych-display-element {
+    background: #f7f7f7 !important;
+    color: #000 !important;
+}
+
+/* 5) Fallback: force a light backdrop (for browsers that use a backdrop layer) */
+::backdrop {
+    background: rgba(247,247,247,1) !important;
+}
