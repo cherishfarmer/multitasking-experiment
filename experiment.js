@@ -1,4 +1,4 @@
-// Multitasking Experiment - prototype
+// Multitasking Experiment
 const jsPsych = initJsPsych({
   on_finish: function() {
     jsPsych.data.displayData();
@@ -15,8 +15,8 @@ let timeline = [];
 // (this is to help us with data collection, numbers are for participants so they don't get an idea of what
 // the other conditions are like)
 const conditions = [
-  //{source: "same", difficulty: "easy", label: "1"},
-  //{source: "same", difficulty: "hard", label: "2"},
+  {source: "same", difficulty: "easy", label: "1"},
+  {source: "same", difficulty: "hard", label: "2"},
   {source: "different", difficulty: "easy", label: "3"},
   {source: "different", difficulty: "hard", label: "4"}
 ];
@@ -33,8 +33,6 @@ const fullscr = {
   }
 };
 timeline.push(fullscr);
-
-// Consent Form (insert here)
 
 // Instructions
 timeline.push({
@@ -69,7 +67,7 @@ let primaryState = {
 // Persistent secondary state (so the participant resumes where they left off)
 let secondaryState = {
   found: new Set(),
-  markers: {}
+  markers: new Set()
 };
 
 // ACT passage reading with questions
@@ -359,11 +357,15 @@ function wordSearchTask(difficulty) {
       </div>
     `,
     choices: "NO_KEYS",
-    trial_duration: 1 * 60 * 1000, // auto-advance after 1 minute
+    trial_duration: 1 * 60 * 1000,
     on_load: function () {
       const input = document.getElementById("found-word");
       const wordListEl = document.getElementById("word-list");
       input.focus();
+
+      secondaryState.markers.forEach(marker => {
+        wordListEl.appendChild(marker);
+      });
 
       input.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
@@ -375,11 +377,13 @@ function wordSearchTask(difficulty) {
             const newEntry = document.createElement("div");
             newEntry.textContent = `✔ ${word}`;
             wordListEl.appendChild(newEntry);
+            secondaryState.markers.add(newEntry);
           } else if (word) {
             const msg = document.createElement("div");
             msg.textContent = `✖ ${word} (invalid/duplicate)`;
             msg.style.color = "gray";
             wordListEl.appendChild(msg);
+            secondaryState.markers.add(msg);
           }
           wordListEl.scrollTop = wordListEl.scrollHeight;
         }
@@ -390,6 +394,7 @@ function wordSearchTask(difficulty) {
       data.secondary_type = "word_search";
       data.difficulty = difficulty;
       data.found_words = Array.from(secondaryState.found);
+      data.total_words = validWords[difficulty].length;
     }
   };
 }
@@ -437,11 +442,17 @@ function spotDiffTask(difficulty) {
       `;
     },
     choices: "NO_KEYS",
-    trial_duration: 1 * 60 * 1000, // 1 minute
+    trial_duration: 1 * 60 * 1000,
     on_load: function() {
       const img = document.getElementById("diff-img");
       const layer = document.getElementById("click-layer");
       const countDisplay = document.getElementById("found-count");
+
+      secondaryState.markers.forEach(marker => {
+        layer.appendChild(marker);
+      });
+
+      countDisplay.textContent = `Found: ${secondaryState.found.size} / ${differenceSets[difficulty].length}`;
 
       layer.addEventListener("click", function(e) {
         const rect = img.getBoundingClientRect();
@@ -472,7 +483,7 @@ function spotDiffTask(difficulty) {
               marker.style.borderRadius = "50%";
               layer.appendChild(marker);
 
-              secondaryState.markers(marker);
+              secondaryState.markers.add(marker);
             }
           }
         });
@@ -489,10 +500,10 @@ function spotDiffTask(difficulty) {
   };
 }
 
-// Alternate primary (2 min) and secondary (1 min) until 15 minutes
-const totalMinutes = 5; // change for debugging (default: 15))
-const primaryDuration = .1 * 60 * 1000; // 2 minutes -- change for debugging (default: 2)
-const secondaryDuration = .1 * 60 * 1000; // 1 minute -- change for debugging (default: 1)
+// Alternate primary (2 min) and secondary (1 min) for 15 minutes
+const totalMinutes = 15; // change for debugging (default: 15))
+const primaryDuration = 2 * 60 * 1000; // 2 minutes -- change for debugging (default: 2)
+const secondaryDuration = 1 * 60 * 1000; // 1 minute -- change for debugging (default: 1)
 let elapsedMs = 0;
 
 while (elapsedMs < totalMinutes * 60 * 1000) {
@@ -511,8 +522,6 @@ while (elapsedMs < totalMinutes * 60 * 1000) {
     trial_duration: Math.min(secondaryDuration, totalMinutes * 60 * 1000 - elapsedMs)
   });
   elapsedMs += secondaryDuration;
-  console.log(elapsedMs);
-  console.log(totalMinutes * 60 * 1000);
 }
 
 // Exit fullscreen on finish and show results
@@ -521,48 +530,58 @@ const results_screen = {
   stimulus: function(){
     const prim = jsPsych.data.get().filter({ task: 'primary' }).last(1);
 
-    // Sum correct answers and total questions across all primary trials
-    let correct = 0;
-    let total = 0;
+    // Sum correct answers and total questions for primary trial
+    let primCorrect = 0;
+    let primTotal = 0;
     prim.values().forEach(trial => {
-      correct += trial.correctCount || 0;
-      total += trial.totalQuestions || 0;
+      primCorrect += trial.correctCount || 0;
+      primTotal += trial.totalQuestions || 0;
     });
 
-    const accuracy = total > 0 ? ((correct / total) * 100).toFixed(1) : "0.0";
+    const primAccuracy = primTotal > 0 ? ((primCorrect / primTotal) * 100).toFixed(1) : "0.0";
 
-    const csv = jsPsych.data.get().csv();
-    const enc = encodeURIComponent(csv);
+    const sec = jsPsych.data.get().filter({ task: 'secondary' }).last(1);
+
+    // Sum correct answers and total questions for secondary trial
+    let secCorrect = 0;
+    let secTotal = 0;
+
+    sec.values().forEach(trial => {
+      console.log(trial);
+      if (trial.secondary_type === "word_search") {
+        secCorrect += trial.found_words.length || 0;
+        secTotal += trial.total_words || 0;
+      }
+      if (trial.secondary_type === "spot_difference") {
+        secCorrect += trial.found_count || 0;
+        secTotal += trial.total_diffs || 0;
+      }
+    });
+
+    const secAccuracy = secTotal > 0 ? ((secCorrect / secTotal) * 100).toFixed(1) : "0.0";
+
     return `
       <h2>Experiment Complete</h2>
       <p>Your assigned condition: <strong>${condition.label}</strong></p>
-      <p>Primary task accuracy: <strong>${accuracy}%</strong> (${correct}/${total})</p>
+      <p>Primary task accuracy: <strong>${primAccuracy}%</strong> (${primCorrect}/${primTotal})</p>
+      <p>Secondary task accuracy: <strong>${secAccuracy}%</strong> (${secCorrect}/${secTotal})</p>
       <p><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSckINUyDEXo5yF_w-URAd2d84lNes-axzk39I5-9MuaGzJIVw/viewform?embedded=true" width="640" height="840" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe></p>
-      <p>When finished, click Finish.</p>
+      <p>You may now leave this page.</p>
     `;
   },
-  choices: ['Finish'],
+  choices: [''],
   on_start: function(){
-    // ensure fullscreen exit after finishing timeline
-  },
-  on_finish: function(){
     if (document.fullscreenElement) {
       document.exitFullscreen().catch(()=>{});
     }
+  },
+  on_finish: function(){
+    return `
+    <h1>Thank you for your time and have a good rest of your day!</h1>
+    `
   }
 };
 
 timeline.push(results_screen);
 
-// Cleanup/instructions at end
-timeline.push({
-  type: jsPsychHtmlButtonResponse,
-  stimulus: "<p>Thank you for participating. You may close this window.</p>",
-  choices: ["Close"]
-});
-
-jsPsych.run(timeline).then(()=>{
-  setTimeout(()=>{
-
-  }, 500);
-});
+jsPsych.run(timeline);
