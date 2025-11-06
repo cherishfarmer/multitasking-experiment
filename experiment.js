@@ -1,7 +1,6 @@
 // Multitasking Experiment - prototype
 const jsPsych = initJsPsych({
   on_finish: function() {
-    // show a link to download data (participant can copy it)
     jsPsych.data.displayData();
   }
 });
@@ -16,8 +15,8 @@ let timeline = [];
 // (this is to help us with data collection, numbers are for participants so they don't get an idea of what
 // the other conditions are like)
 const conditions = [
-  {source: "same", difficulty: "easy", label: "1"},
-  {source: "same", difficulty: "hard", label: "2"},
+  //{source: "same", difficulty: "easy", label: "1"},
+  //{source: "same", difficulty: "hard", label: "2"},
   {source: "different", difficulty: "easy", label: "3"},
   {source: "different", difficulty: "hard", label: "4"}
 ];
@@ -35,14 +34,28 @@ const fullscr = {
 };
 timeline.push(fullscr);
 
+// Consent Form (insert here)
+
 // Instructions
 timeline.push({
   type: jsPsychHtmlButtonResponse,
   stimulus: `
     <h2>Multitasking Experiment</h2>
-    <p>You will read passages and answer brief questions (primary task).</p>
-    <p>Every 2 minutes you'll be interrupted with a 1-minute secondary task.</p>
-    <p>The experiment will last ~15 minutes. Try your best on both tasks.</p>
+    
+    <p>Thank you for participating in our experiment!</p>
+    <p>Please take a moment to read through and sign our consent form if you have not done so already.</p>
+    <p>Consent forms should be sent to the researcher that provided you with this link.</p>
+    
+    <br>
+    
+    <p>We are investigating multitasking – specifically, what kinds of tasks and situations lead to improved or worsened performance when multitasking.</p>
+    <p>You will be presented with an ACT reading article and accompanying questions, as well as a secondary task (spot the difference or word search).</p>
+    <p>Please answer as many questions for the ACT article and complete as much of the secondary task as possible before the experiment ends.</p>
+    <p>You will have a total of 15 minutes.</p>
+    
+    <br>
+    
+    <p>When you are ready to begin, please click “Begin”. </p>
   `,
   choices: ['Begin']
 });
@@ -53,10 +66,13 @@ let primaryState = {
   answers: {}
 };
 
+// Persistent secondary state (so the participant resumes where they left off)
 let secondaryState = {
-  found: new Set()
+  found: new Set(),
+  markers: {}
 };
 
+// ACT passage reading with questions
 function primaryTask(passage, questions) {
   return {
     timeline: [
@@ -98,7 +114,7 @@ function primaryTask(passage, questions) {
             </div>
           `;
         },
-        choices: "NO_KEYS", // no user advance
+        choices: "NO_KEYS",
         trial_duration: 2 * 60 * 1000, // auto advance after 2 minutes
         on_load: () => {
           // restore scroll position
@@ -143,15 +159,15 @@ function primaryTask(passage, questions) {
 // May not be perfect on all screens, had to adjust because of formatting from source from pulled from
 const passages = [
   primaryTask(
-      "1            One crucial element of the beauty of the tulip that\n" +
-      "2    intoxicated the Dutch, the Turks, the French, and the\n" +
-      "3    English has been lost to us. To them the tulip was a\n" +
-      "4    magic flower because it was prone to spontaneous and\n" +
-      "5    brilliant eruptions of color. In a planting of a hundred\n" +
-      "6    tulips, one of them might be so possessed, opening to\n" +
-      "7    reveal the white or yellow ground of its petals painted,\n" +
-      "8    as if by the finest brush and steadiest hand, with intricate feathers or flames of a vividly contrasting hue.\n" +
-      "9    When this happened, the tulip was said to have\n" +
+      "1             One crucial element of the beauty of the tulip that\n" +
+      "2     intoxicated the Dutch, the Turks, the French, and the\n" +
+      "3     English has been lost to us. To them the tulip was a\n" +
+      "4     magic flower because it was prone to spontaneous and\n" +
+      "5     brilliant eruptions of color. In a planting of a hundred\n" +
+      "6     tulips, one of them might be so possessed, opening to\n" +
+      "7     reveal the white or yellow ground of its petals painted,\n" +
+      "8     as if by the finest brush and steadiest hand, with intricate feathers or flames of a vividly contrasting hue.\n" +
+      "9     When this happened, the tulip was said to have\n" +
       "10   “broken,” and if a tulip broke in a particularly striking\n" +
       "11   manner—if the flames of the applied color reached\n" +
       "12   clear to the petal’s lip, say, and its pigment was brilliant and pure and its pattern symmetrical—the owner\n" +
@@ -317,11 +333,16 @@ const passages = [
   )
 ];
 
-// Secondary task generators
+// Same source task (word search)
 function wordSearchTask(difficulty) {
-  const validWords = ["aardvark", "ant", "badger", "bat", "bear", "cheetah",
-    "crocodile", "crow", "dinosaur", "doe", "dolphin", "eel", "fish", "hedgehog", "hamster", "mole",
-    "ostrich", "pony", "rabbit", "rat", "raven", "zebra"];
+  const validWords = {
+    easy: ["vanilla", "chocolate", "strawberry", "moose tracks", "reeses", "triple tornado",
+    "pecan", "fudge", "cookie dough", "maple walnut", "coconut", "cotton candy",
+    "hokey pokey", "neopolitan", "banana", "rocky road"],
+    hard: ["cow", "goat", "pig", "buffalo", "chicken", "sheep", "lamb", "goose", "turkey", "duck",
+    "horse", "cattle", "llama", "bison", "hen", "calf", "rooster", "bull", "foal", "dog", "geese",
+    "fish", "deer", "birds", "bees"]
+  };
 
   return {
     type: jsPsychHtmlKeyboardResponse,
@@ -329,7 +350,7 @@ function wordSearchTask(difficulty) {
       <div style="display:flex;gap:30px;width:90%;margin:auto;">
         <div style="flex:1;text-align:center;">
           <img src="assets/${difficulty}_wordsearch.png" style="max-width:100%;height:auto;">
-          <p>Type a word you found:</p>
+          <p>Type a word you found (use Enter to submit):</p>
           <input type="text" id="found-word" style="width:80%;padding:6px;font-size:16px;" />
         </div>
         <div id="word-list" style="flex:1;border-left:2px solid #ccc;padding-left:20px;overflow-y:auto;height:400px;">
@@ -349,7 +370,7 @@ function wordSearchTask(difficulty) {
           e.preventDefault();
           const word = input.value.trim().toLowerCase();
           input.value = "";
-          if (word && validWords.includes(word) && !secondaryState.found.has(word)) {
+          if (word && validWords[difficulty].includes(word) && !secondaryState.found.has(word)) {
             secondaryState.found.add(word);
             const newEntry = document.createElement("div");
             newEntry.textContent = `✔ ${word}`;
@@ -373,13 +394,34 @@ function wordSearchTask(difficulty) {
   };
 }
 
-
+// Different source task (find the difference)
 function spotDiffTask(difficulty) {
-  const differences = [
-    { x: 0.3, y: 0.4, width: 0.05, height: 0.05 },
-    { x: 0.55, y: 0.2, width: 0.05, height: 0.05 },
-    { x: 0.7, y: 0.75, width: 0.05, height: 0.05 }
-  ];
+  // Coordinate sets for each difficulty (left-side only)
+  const differenceSets = {
+    easy: [
+      { x: 137/754,   y: 380/460 },
+      { x: 229/754, y: 59/460 },
+      { x: 266/754, y: 147/460 },
+      { x: 192/754, y: 337/460 }
+    ],
+    hard: [
+      { x: 0.4178082191780822, y: 0.18518853422551768 },
+      { x: 0.1095890410958904, y: 0.28935708472737137 },
+      { x: 0.3100352769093986, y: 0.6975718509184317 },
+      { x: 0.14897260273972604, y: 0.02893570847273714 },
+      { x: 0.3784246575342466, y: 0.3414413599782982 },
+      { x: 0.4743150684931507, y: 0.48033276064743646 },
+      { x: 0.1934931506849315, y: 0.5179491816619948 },
+      { x: 0.039383561643835614, y: 0.656840582331133 },
+      { x: 0.18493150684931506, y: 0.9490912379057781 }
+    ]
+  };
+
+  // Get the set for the difficulty
+  const differences = differenceSets[difficulty];
+
+  // Define hitbox size relative to image
+  const hitboxSize = 0.05;
 
   return {
     type: jsPsychHtmlKeyboardResponse,
@@ -390,12 +432,12 @@ function spotDiffTask(difficulty) {
           <img id="diff-img" src="${imgSrc}" style="width:100%;height:auto;">
           <div id="click-layer" style="position:absolute;top:0;left:0;width:100%;height:100%;"></div>
         </div>
-        <p style="text-align:center;">Click on differences (auto-advances after 1 minute)</p>
-        <div id="found-count" style="text-align:center;margin-top:10px;">Found: 0 / ${differences.length}</div>
+        <p style="text-align:center;">Click on the differences in the left image.</p>
+        <div id="found-count" style="text-align:center;margin-top:10px;">Found: 0 / ${differenceSets[difficulty].length}</div>
       `;
     },
     choices: "NO_KEYS",
-    trial_duration: 1 * 60 * 1000,
+    trial_duration: 1 * 60 * 1000, // 1 minute
     on_load: function() {
       const img = document.getElementById("diff-img");
       const layer = document.getElementById("click-layer");
@@ -405,15 +447,32 @@ function spotDiffTask(difficulty) {
         const rect = img.getBoundingClientRect();
         const xRel = (e.clientX - rect.left) / rect.width;
         const yRel = (e.clientY - rect.top) / rect.height;
+        console.log(`X: ${xRel}, Y: ${yRel}`);
 
         differences.forEach((diff, i) => {
           if (!secondaryState.found.has(i)) {
             if (
-                xRel >= diff.x && xRel <= diff.x + diff.width &&
-                yRel >= diff.y && yRel <= diff.y + diff.height
+                xRel >= diff.x - hitboxSize/2 &&
+                xRel <= diff.x + hitboxSize/2 &&
+                yRel >= diff.y - hitboxSize/2 &&
+                yRel <= diff.y + hitboxSize/2
             ) {
               secondaryState.found.add(i);
-              countDisplay.textContent = `Found: ${secondaryState.found.size} / ${differences.length}`;
+              countDisplay.textContent = `Found: ${secondaryState.found.size} / ${differenceSets[difficulty].length}`;
+
+              // Visual feedback
+              const marker = document.createElement("div");
+              marker.style.position = "absolute";
+              marker.style.left = `${xRel * 100}%`;
+              marker.style.top = `${yRel * 100}%`;
+              marker.style.transform = "translate(-50%, -50%)";
+              marker.style.width = "20px";
+              marker.style.height = "20px";
+              marker.style.border = "3px solid red";
+              marker.style.borderRadius = "50%";
+              layer.appendChild(marker);
+
+              secondaryState.markers(marker);
             }
           }
         });
@@ -424,17 +483,16 @@ function spotDiffTask(difficulty) {
       data.secondary_type = "spot_difference";
       data.difficulty = difficulty;
       data.found_count = secondaryState.found.size;
-      data.total_diffs = differences.length;
+      data.total_diffs = differenceSets[difficulty].length;
+      console.log(secondaryState.found);
     }
   };
 }
 
-
-
 // Alternate primary (2 min) and secondary (1 min) until 15 minutes
-const totalMinutes = 15; // change for debugging
-const primaryDuration = 2 * 60 * 1000; // 2 minutes
-const secondaryDuration = 1 * 60 * 1000; // 1 minute
+const totalMinutes = 5; // change for debugging (default: 15))
+const primaryDuration = .1 * 60 * 1000; // 2 minutes -- change for debugging (default: 2)
+const secondaryDuration = .1 * 60 * 1000; // 1 minute -- change for debugging (default: 1)
 let elapsedMs = 0;
 
 while (elapsedMs < totalMinutes * 60 * 1000) {
@@ -457,13 +515,11 @@ while (elapsedMs < totalMinutes * 60 * 1000) {
   console.log(totalMinutes * 60 * 1000);
 }
 
-
-
 // Exit fullscreen on finish and show results
 const results_screen = {
   type: jsPsychHtmlButtonResponse,
   stimulus: function(){
-    const prim = jsPsych.data.get().filter({ task: 'primary' });
+    const prim = jsPsych.data.get().filter({ task: 'primary' }).last(1);
 
     // Sum correct answers and total questions across all primary trials
     let correct = 0;
@@ -498,7 +554,7 @@ const results_screen = {
 
 timeline.push(results_screen);
 
-// Add a bit of cleanup/instructions at end (optional)
+// Cleanup/instructions at end
 timeline.push({
   type: jsPsychHtmlButtonResponse,
   stimulus: "<p>Thank you for participating. You may close this window.</p>",
@@ -506,16 +562,7 @@ timeline.push({
 });
 
 jsPsych.run(timeline).then(()=>{
-  // After run, attach copy button behavior
   setTimeout(()=>{
-    const copyBtn = document.getElementById('copyBtn');
-    if(copyBtn){
-      copyBtn.addEventListener('click', ()=>{
-        const csvbox = document.getElementById('csvbox');
-        if(csvbox){
-          navigator.clipboard.writeText(csvbox.value).then(()=>{ alert('Data copied to clipboard'); });
-        }
-      });
-    }
+
   }, 500);
 });
