@@ -49,6 +49,7 @@ timeline.push({
     <p>We are investigating multitasking – specifically, what kinds of tasks and situations lead to improved or worsened performance when multitasking.</p>
     <p>You will be presented with an ACT reading article and accompanying questions, as well as a secondary task (spot the difference or word search).</p>
     <p>Please answer as many questions for the ACT article and complete as much of the secondary task as possible before the experiment ends.</p>
+    <p><b>Even if you complete all the tasks, please stay on this page until you reach the results screen so you can complete the form at the end.</b></p>
     <p>You will have a total of 15 minutes.</p>
     
     <br>
