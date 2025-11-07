@@ -28,9 +28,9 @@ Preparing and partaking in the experiment is very easy! Contact one of the resea
 ### Sources
 jsPsych Developers. (2025). jsPsych: Create behavioral experiments in a browser using JavaScript [[Computer software]](https://github.com/jspsych/jsPsych). https://github.com/jspsych/jsPsych
 
-DLC Websites. (2025). Spot The Difference: Find the differences [[Website]](https://www.spotthedifference.com/). https://www.spotthedifference.com/
-
 TheWordSearch.com. (n.d.). General Animals 1; Ice Cream Flavors [[Website]](https://thewordsearch.com). https://thewordsearch.com
+
+Xtra Foods & Cares. (2020, June 15). Spot the difference: Win — Sushi edition! Who’s the genius to spot all seven differences? [[Facebook post]](https://www.facebook.com/xtrafoodscares/posts/spot-the-difference-win-sushi-edition-whos-the-genius-to-spot-all-seven-differen/2133532803381533/). Facebook. https://www.facebook.com/xtrafoodscares/posts/spot-the-difference-win-sushi-edition-whos-the-genius-to-spot-all-seven-differen/2133532803381533/
 
 World of Printables. (n.d.). Difficult Spot the Difference Games [[Website]](https://worldofprintables.com/difficult-spot-the-difference-games/#Difficult-Spot-The-Difference-Games). https://worldofprintables.com/difficult-spot-the-difference-games/#Difficult-Spot-The-Difference-Games
 

@@ -15,10 +15,10 @@ let timeline = [];
 // (this is to help us with data collection, numbers are for participants so they don't get an idea of what
 // the other conditions are like)
 const conditions = [
-  {source: "same", difficulty: "easy", label: "1"},
-  {source: "same", difficulty: "hard", label: "2"},
+  //{source: "same", difficulty: "easy", label: "1"},
+  //{source: "same", difficulty: "hard", label: "2"},
   {source: "different", difficulty: "easy", label: "3"},
-  {source: "different", difficulty: "hard", label: "4"}
+  //{source: "different", difficulty: "hard", label: "4"}
 ];
 const condition = jsPsych.randomization.sampleWithoutReplacement(conditions, 1)[0];
 jsPsych.data.addProperties({ condition: condition.label });
@@ -404,10 +404,15 @@ function spotDiffTask(difficulty) {
   // Coordinate sets for each difficulty (left-side only)
   const differenceSets = {
     easy: [
-      { x: 137/754,   y: 380/460 },
-      { x: 229/754, y: 59/460 },
-      { x: 266/754, y: 147/460 },
-      { x: 192/754, y: 337/460 }
+      { x: 0.3357329279834801, y: 0.006444357942995545 },
+      { x: 0.2347778701924456, y: 0.08671770252151724 },
+      { x: 0.14850718444374336, y: 0.31092945806842265 },
+      { x: 0.04571658014741733, y: 0.4022749881060508 },
+      { x: 0.047552126652708866, y: 0.4825483326845725 },
+      { x: 0.06141423122149884, y: 0.6652393927598287 },
+      { x: 0.31737746293056474, y: 0.7206003200553609 },
+      { x: 0.19806694008661485, y: 0.9697244928852559 },
+      { x: 0.4807411019015115, y: 0.7150642273258077 }
     ],
     hard: [
       { x: 0.4178082191780822, y: 0.18518853422551768 },
@@ -502,8 +507,8 @@ function spotDiffTask(difficulty) {
 
 // Alternate primary (2 min) and secondary (1 min) for 15 minutes
 const totalMinutes = 15; // change for debugging (default: 15))
-const primaryDuration = 2 * 60 * 1000; // 2 minutes -- change for debugging (default: 2)
-const secondaryDuration = 1 * 60 * 1000; // 1 minute -- change for debugging (default: 1)
+const primaryDuration = .1 * 60 * 1000; // 2 minutes -- change for debugging (default: 2)
+const secondaryDuration = 10 * 60 * 1000; // 1 minute -- change for debugging (default: 1)
 let elapsedMs = 0;
 
 while (elapsedMs < totalMinutes * 60 * 1000) {
