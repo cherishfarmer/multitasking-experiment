@@ -507,8 +507,8 @@ function spotDiffTask(difficulty) {
 
 // Alternate primary (2 min) and secondary (1 min) for 15 minutes
 const totalMinutes = 15; // change for debugging (default: 15))
-const primaryDuration = .1 * 60 * 1000; // 2 minutes -- change for debugging (default: 2)
-const secondaryDuration = 10 * 60 * 1000; // 1 minute -- change for debugging (default: 1)
+const primaryDuration = 2 * 60 * 1000; // 2 minutes -- change for debugging (default: 2)
+const secondaryDuration = 1 * 60 * 1000; // 1 minute -- change for debugging (default: 1)
 let elapsedMs = 0;
 
 while (elapsedMs < totalMinutes * 60 * 1000) {
