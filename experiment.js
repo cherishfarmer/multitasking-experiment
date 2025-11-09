@@ -16,9 +16,9 @@ let timeline = [];
 // the other conditions are like)
 const conditions = [
   {source: "same", difficulty: "easy", label: "1"},
-  {source: "same", difficulty: "hard", label: "2"},
-  {source: "different", difficulty: "easy", label: "3"},
-  {source: "different", difficulty: "hard", label: "4"}
+  //{source: "same", difficulty: "hard", label: "2"},
+  //{source: "different", difficulty: "easy", label: "3"},
+  //{source: "different", difficulty: "hard", label: "4"}
 ];
 const condition = jsPsych.randomization.sampleWithoutReplacement(conditions, 1)[0];
 jsPsych.data.addProperties({ condition: condition.label });
