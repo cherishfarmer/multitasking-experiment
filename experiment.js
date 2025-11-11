@@ -15,9 +15,9 @@ let timeline = [];
 // (this is to help us with data collection, numbers are for participants so they don't get an idea of what
 // the other conditions are like)
 const conditions = [
-  //{source: "same", difficulty: "easy", label: "1"},
-  //{source: "same", difficulty: "hard", label: "2"},
-  //{source: "different", difficulty: "easy", label: "3"},
+  {source: "same", difficulty: "easy", label: "1"},
+  {source: "same", difficulty: "hard", label: "2"},
+  {source: "different", difficulty: "easy", label: "3"},
   {source: "different", difficulty: "hard", label: "4"}
 ];
 const condition = jsPsych.randomization.sampleWithoutReplacement(conditions, 1)[0];
