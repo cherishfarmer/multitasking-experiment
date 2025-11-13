@@ -36,5 +36,6 @@ World of Printables. (n.d.). Difficult Spot the Difference Games [[Website]](htt
 
 Developed by Cherish Farmer, Principles of Experimental Design @ Vanderbilt University, Fall 2025
 
+<img width="721" height="555" alt="Screenshot 2025-11-11 220437" src="https://github.com/user-attachments/assets/64fa50d4-6176-45e6-b0d8-7794444a9ca6" />
 
 
