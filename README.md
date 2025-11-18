@@ -26,13 +26,16 @@ Preparing and partaking in the experiment is very easy! Contact one of the resea
   
 
 ### Sources
+
+ACT Education Corp. (2025). Preparing for the ACT® test: 2025–2026 [[PDF]](https://www.act.org/content/dam/act/secured/documents/Preparing-for-the-ACT.pdf). https://www.act.org/content/dam/act/secured/documents/Preparing-for-the-ACT.pdf
+
 jsPsych Developers. (2025). jsPsych: Create behavioral experiments in a browser using JavaScript [[Computer software]](https://github.com/jspsych/jsPsych). https://github.com/jspsych/jsPsych
 
 TheWordSearch.com. (n.d.). General Animals 1; Ice Cream Flavors [[Website]](https://thewordsearch.com). https://thewordsearch.com
 
-Xtra Foods & Cares. (2020, June 15). Spot the difference: Win — Sushi edition! Who’s the genius to spot all seven differences? [[Facebook post]](https://www.facebook.com/xtrafoodscares/posts/spot-the-difference-win-sushi-edition-whos-the-genius-to-spot-all-seven-differen/2133532803381533/). Facebook. https://www.facebook.com/xtrafoodscares/posts/spot-the-difference-win-sushi-edition-whos-the-genius-to-spot-all-seven-differen/2133532803381533/
-
 World of Printables. (n.d.). Difficult Spot the Difference Games [[Website]](https://worldofprintables.com/difficult-spot-the-difference-games/#Difficult-Spot-The-Difference-Games). https://worldofprintables.com/difficult-spot-the-difference-games/#Difficult-Spot-The-Difference-Games
+
+Xtra Foods & Cares. (2020, June 15). Spot the difference: Win — Sushi edition! Who’s the genius to spot all seven differences? [[Facebook post]](https://www.facebook.com/xtrafoodscares/posts/spot-the-difference-win-sushi-edition-whos-the-genius-to-spot-all-seven-differen/2133532803381533/). Facebook. https://www.facebook.com/xtrafoodscares/posts/spot-the-difference-win-sushi-edition-whos-the-genius-to-spot-all-seven-differen/2133532803381533/
 
 Developed by Cherish Farmer, Principles of Experimental Design @ Vanderbilt University, Fall 2025
 
